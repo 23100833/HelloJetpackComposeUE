@@ -38,12 +38,13 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HelloComposeForm(){
-    var name by remember { mutableStateOf(value = "") }
-    var birthDate by remember { mutableStateOf(value = "") }
+    var talla by remember { mutableStateOf(value = "") }
+    var peso by remember { mutableStateOf(value = "") }
+    var imc by remember { mutableStateOf(value = "") }
 
     Scaffold(
         topBar = {
-            TopAppBar(title = {Text("ESAN app")})
+            TopAppBar(title = {Text("IMC")})
         }
     ) { padding ->
         Column(
@@ -52,22 +53,35 @@ fun HelloComposeForm(){
                 .fillMaxSize(),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ){
-            Text("Bienvenidos al curso de aplicaciones móviles")
+            Text("Hola ESANINO")
             OutlinedTextField(
-                value = name,
-                onValueChange = {name = it},
-                label = {Text("Nombre")}
+                value = talla,
+                onValueChange = {talla = it},
+                label = {Text("Talla (cm)")}
             )
             OutlinedTextField(
-                value = birthDate,
-                onValueChange = {birthDate = it},
-                label = {Text("Fecha de Nacimiento")}
+                value = peso,
+                onValueChange = {peso = it},
+                label = {Text("Peso (kg)")}
             )
             Button(
-                onClick = {},
-                enabled = name.isNotEmpty() && birthDate.isNotEmpty()
+                onClick = {
+                    val tallaNumero = talla.toDoubleOrNull()
+                    val pesoNumero = peso.toDoubleOrNull()
+
+                    if (tallaNumero != null && pesoNumero != null) {
+                        val tallaMetros = tallaNumero/100
+                        val resultado = pesoNumero / (tallaMetros * tallaMetros)
+                        imc = "%.2f".format(resultado)
+                    }},
+                enabled = talla.isNotEmpty() && peso.isNotEmpty()
             ){
-                Text("Enviar")
+                Text("Calcular")
+            }
+            if (imc.isNotEmpty()) {
+                Text(
+                    text = "IMC: $imc"
+                )
             }
         }
     }
